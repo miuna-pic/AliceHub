@@ -77,7 +77,10 @@ object LocalGamePresets {
     val byId: Map<String, LocalGamePreset> = all.associateBy { it.id }
 
     private fun normalizedTitle(title: String): String =
-        Normalizer.normalize(title, Normalizer.Form.NFKC).trim().lowercase(java.util.Locale.ROOT)
+        Normalizer.normalize(title, Normalizer.Form.NFKC)
+            .replace(Regex("[〜～∼~]"), "~")
+            .replace(Regex("[−－‐‑‒–—―-]"), "-")
+            .trim().lowercase(java.util.Locale.ROOT)
 
     fun recognize(fileNames: Collection<String>, readSmallFile: ((String) -> ByteArray?)?): String? {
         if (readSmallFile == null) return null

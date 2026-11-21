@@ -97,6 +97,23 @@ public class LocalGamePresetsTest {
         assertEquals("pastel_cpp", GameCatalog.INSTANCE.classifyDirectory(dir, "unknown", null, null));
     }
 
+    @Test public void acceptsWaveDashAndMinusVariants() throws Exception {
+        for (String wave : Arrays.asList("\u301c", "\uff5e", "\u223c", "~")) {
+            File dir = fixture("System39.ini", "かえるにょ・ぱにょ" + wave + "ん", StandardCharsets.UTF_8);
+            assertEquals("kaerunyo", GameCatalog.INSTANCE.classifyDirectory(dir, "unknown", null, null));
+        }
+        for (String dash : Arrays.asList("\u2212", "\uff0d", "\u2010", "\u2011", "\u2012", "\u2013", "\u2014", "\u2015", "-")) {
+            File dir = fixture("System39.ini", "RanceIV " + dash + "教団の遺産" + dash, StandardCharsets.UTF_8);
+            assertEquals("rance04", GameCatalog.INSTANCE.classifyDirectory(dir, "unknown", null, null));
+        }
+        String title = "かえるにょ・ぱにょ～ん";
+        byte[] raw = ("GameName = \"" + title.replace('\uff5e', '\u301c') + "\"\r\n").getBytes(Charset.forName("Shift_JIS"));
+        assertTrue(new String(raw, Charset.forName("Shift_JIS")).contains("\u301c"));
+        File dir = temporary.newFolder();
+        Files.write(new File(dir, "System39.ini").toPath(), raw);
+        assertEquals("kaerunyo", GameCatalog.INSTANCE.classifyDirectory(dir, "unknown", null, null));
+    }
+
     @Test public void emptyUnknownPartialWrongEngineAndConflictingTitlesStayCustom() throws Exception {
         assertEquals("custom:unknown", GameCatalog.INSTANCE.classifyDirectory(temporary.newFolder(), "unknown", null, null));
         for (String title : Arrays.asList("", "Unknown", "ままにょにょ sequel", "ままにょ", "闘神都市II")) {
