@@ -168,7 +168,7 @@ public class IxsealCatalogTest {
         );
 
         List<String> order = GameCatalog.builtInSelectOrder();
-        assertEquals(20, order.size());
+        assertEquals(20 + LocalGamePresets.INSTANCE.getAll().size(), order.size());
         int erIdx = order.indexOf(GameCatalog.ID_ESCALAYER_REBOOT);
         int galIdx = order.indexOf(GameCatalog.ID_GALZOO);
         int ixIdx = order.indexOf(GameCatalog.ID_IXSEAL);
@@ -176,7 +176,7 @@ public class IxsealCatalogTest {
         assertTrue(galIdx > erIdx);
         assertTrue(ixIdx > galIdx);
         assertTrue(order.contains(GameCatalog.ID_DAIAKUJI));
-        for (String id : order) {
+        for (String id : order.subList(0, 20)) {
             assertNotNull("Missing GameSortMetadata for " + id, GameSortMetadata.INSTANCE.forGame(id));
         }
 

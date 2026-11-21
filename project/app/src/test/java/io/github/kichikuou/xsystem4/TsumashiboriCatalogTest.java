@@ -200,12 +200,12 @@ public class TsumashiboriCatalogTest {
         assertFalse(desc.isRance10());
 
         List<String> order = GameCatalog.builtInSelectOrder();
-        assertEquals(20, order.size());
+        assertEquals(20 + LocalGamePresets.INSTANCE.getAll().size(), order.size());
         int ixIdx = order.indexOf(GameCatalog.ID_IXSEAL);
         int tsIdx = order.indexOf(GameCatalog.ID_TSUMASHIBORI);
         assertTrue(ixIdx >= 0);
         assertTrue(tsIdx > ixIdx);
-        for (String id : order) {
+        for (String id : order.subList(0, 20)) {
             assertNotNull("Missing GameSortMetadata for " + id, GameSortMetadata.INSTANCE.forGame(id));
         }
 

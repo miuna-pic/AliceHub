@@ -412,7 +412,7 @@ object GameCatalog {
         if (isDaiakujiGameFiles(fileNames, bgmFileNames, readSmallFile)) {
             return ID_DAIAKUJI
         }
-        return null
+        return LocalGamePresets.recognize(fileNames, readSmallFile)
     }
 
     fun classifyGameRootDir(gameDir: File?): String? {
@@ -1463,6 +1463,23 @@ object GameCatalog {
         gameList: GameList? = null,
         stringResolver: (Int) -> String
     ): GameDescriptor {
+        LocalGamePresets.byId[gameId]?.let { preset ->
+            return GameDescriptor(
+                id = preset.id,
+                title = stringResolver(preset.titleRes),
+                defaultDirName = preset.defaultDirName,
+                expectedAinName = null,
+                iconRes = R.drawable.ic_launcher,
+                accentColor = 0xFF3F51B5.toInt(),
+                accentBorderColor = 0x665C6BC0,
+                iconFrameColor = 0xFF232733.toInt(),
+                supportsOnlineBaseInstall = false,
+                onlineBaseCdnUrl = null,
+                supportsOnlineMod = false,
+                supportsLocalMod = false,
+                isRance10 = false
+            )
+        }
         return when (gameId) {
             ID_RANCE10 -> GameDescriptor(
                 id = ID_RANCE10,
@@ -1817,7 +1834,7 @@ object GameCatalog {
         ID_HARUKA,
         ID_TSUMASHIBORI,
         ID_TSUMAMIGUI3
-    )
+    ) + LocalGamePresets.all.map { it.id }
 
     fun buildSelectEntries(context: Context, gameList: GameList): List<GameSelectEntry> {
         val entries = ArrayList<GameSelectEntry>()

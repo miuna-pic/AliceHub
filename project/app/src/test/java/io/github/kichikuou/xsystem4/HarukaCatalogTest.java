@@ -289,12 +289,12 @@ public class HarukaCatalogTest {
         );
 
         List<String> order = GameCatalog.builtInSelectOrder();
-        assertEquals(20, order.size());
+        assertEquals(20 + LocalGamePresets.INSTANCE.getAll().size(), order.size());
         int ixIdx = order.indexOf(GameCatalog.ID_IXSEAL);
         int harukaIdx = order.indexOf(GameCatalog.ID_HARUKA);
         assertTrue(ixIdx >= 0);
         assertTrue(harukaIdx > ixIdx);
-        for (String id : order) {
+        for (String id : order.subList(0, 20)) {
             assertNotNull("Missing GameSortMetadata for " + id, GameSortMetadata.INSTANCE.forGame(id));
         }
 
@@ -328,7 +328,7 @@ public class HarukaCatalogTest {
             }
         }
         assertEquals(Double.valueOf(67.9), vndbRatings.get("https://vndb.org/v284"));
-        for (String id : order) {
+        for (String id : order.subList(0, 20)) {
             GameSortInfo meta = GameSortMetadata.INSTANCE.forGame(id);
             assertNotNull(meta);
             LocalDate.parse(meta.getReleaseDate());
